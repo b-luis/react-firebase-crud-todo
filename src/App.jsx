@@ -28,11 +28,13 @@ function App() {
   const [count, setCount] = useState(0);
 
   // Create Todo
-  const createTodo = async () => {
-    await addDoc(todosCollection, {
+  const createTodo = async (e) => {
+    e.preventDefault();
+    await addDoc(collection(db, "todos"), {
       text: input,
       completed: false,
     });
+    setInput("");
   };
 
   // Read Todo from firebase
@@ -87,7 +89,7 @@ function App() {
     <div className={style.bg}>
       <div className={style.container}>
         <h3 className={style.heading}>Todo App</h3>
-        <form className={style.form}>
+        <form onSubmit={createTodo} className={style.form}>
           <input
             className={style.input}
             type="text"
@@ -95,7 +97,7 @@ function App() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-          <button onClick={createTodo} className={style.button}>
+          <button className={style.button}>
             <AiOutlinePlus size={30} />
           </button>
         </form>
