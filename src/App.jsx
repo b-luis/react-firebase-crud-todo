@@ -9,6 +9,7 @@ import {
   onSnapshot,
   updateDoc,
   deleteDoc,
+  addDoc,
 } from "firebase/firestore";
 
 const style = {
@@ -23,7 +24,17 @@ const style = {
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [input, setInput] = useState("");
+  const [count, setCount] = useState(0);
+
   // Create Todo
+  const createTodo = async () => {
+    await addDoc(todosCollection, {
+      text: input,
+      completed: false,
+    });
+  };
+
   // Read Todo from firebase
   // ! real time
   useEffect(() => {
@@ -34,6 +45,7 @@ function App() {
         todosArr.push({ ...doc.data(), id: doc.id });
       });
       setTodos(todosArr);
+      setCount(todosArr.length);
     });
     return unsubscribe;
   }, []);
@@ -76,8 +88,14 @@ function App() {
       <div className={style.container}>
         <h3 className={style.heading}>Todo App</h3>
         <form className={style.form}>
-          <input className={style.input} type="text" placeholder="Add Todo" />
-          <button className={style.button}>
+          <input
+            className={style.input}
+            type="text"
+            placeholder="Add Todo"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <button onClick={createTodo} className={style.button}>
             <AiOutlinePlus size={30} />
           </button>
         </form>
@@ -91,7 +109,7 @@ function App() {
             />
           ))}
         </ul>
-        <p className={style.count}>You have 2 todos</p>
+        <p className={style.count}>You have {count} todos</p>
       </div>
     </div>
   );
