@@ -111,7 +111,9 @@ function App() {
             />
           ))}
         </ul>
-        <p className={style.count}>You have {count} todos</p>
+        <p className={style.count}>
+          You have {count} {count <= 1 ? "todo" : "todos"}
+        </p>
       </div>
     </div>
   );
